@@ -16,7 +16,7 @@ func printMenu() {
 	fmt.Println("Please select an option:")
 
 	fmt.Println("1 - Start new analisys")
-	fmt.Println("2 - Show analisys history")
+	fmt.Println("2 - Show analisys logs")
 	fmt.Println("3 - Exit")
 
 	var option int
@@ -90,12 +90,19 @@ func registerLog(message string) {
 
 	timestamp := "[" + time.Now().Format("02/01/2006 15:04:05") + "] "
 
-	file.WriteString(timestamp + message + "\n")
+	file.WriteString("\n" + timestamp + message)
 	file.Close()
 }
 
 func showHistory() {
+	file, err := os.ReadFile("monitoring.log")
 
+	if err == nil {
+		fmt.Println("Applcation logs:")
+		fmt.Println(string(file))
+	} else {
+		fmt.Println("Error while reading log file:", err)
+	}
 }
 
 func main() {
