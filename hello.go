@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func printMenu() {
@@ -36,32 +39,33 @@ func printMenu() {
 }
 
 func startAnalisys() {
-	sites := []string{
-		"https://www.google.com",
-		"https://www.youtube.com",
-		"https://www.facebook.com",
-		"https://www.amazon.com",
-		"https://www.wikipedia.org",
-		"https://www.twitter.com",
-		"https://www.instagram.com",
-		"https://www.linkedin.com",
-		"https://www.netflix.com",
-		"https://www.reddit.com",
-		"https://www.yahoo.com",
-		"https://www.ebay.com",
-		"https://www.bing.com",
-		"https://www.msn.com",
-		"https://www.pinterest.com",
-		"https://www.tumblr.com",
-		"https://www.paypal.com",
-		"https://www.espn.com",
-		"https://www.bbc.com",
-		"https://www.cnn.com",
-	}
+	sites := loadSites()
 
 	for _, site := range sites {
 		fmt.Println(checkSite(site))
 	}
+}
+
+func loadSites() []string {
+	sites := []string{}
+
+	file, _ := os.Open("sites.txt")
+
+	reader := bufio.NewReader(file)
+
+	for {
+		line, err := reader.ReadString('\n')
+
+		sites = append(sites, strings.TrimSpace(line))
+
+		if err == io.EOF {
+			break
+		}
+	}
+
+	file.Close()
+
+	return sites
 }
 
 func checkSite(site string) string {
