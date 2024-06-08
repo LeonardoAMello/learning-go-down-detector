@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func printMenu() {
@@ -42,7 +43,9 @@ func startAnalisys() {
 	sites := loadSites()
 
 	for _, site := range sites {
-		fmt.Println(checkSite(site))
+		status := checkSite(site)
+		fmt.Println(status)
+		registerLog(status)
 	}
 }
 
@@ -76,6 +79,19 @@ func checkSite(site string) string {
 	}
 
 	return site + " " + strconv.Itoa(response.StatusCode)
+}
+
+func registerLog(message string) {
+	file, err := os.OpenFile("monitoring.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+
+	if err != nil {
+
+	}
+
+	timestamp := "[" + time.Now().Format("02/01/2006 15:04:05") + "] "
+
+	file.WriteString(timestamp + message + "\n")
+	file.Close()
 }
 
 func showHistory() {
